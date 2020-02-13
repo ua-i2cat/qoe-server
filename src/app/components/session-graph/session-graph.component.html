@@ -1,0 +1,20 @@
+<div class="flex">
+  <div class="flex-item">
+  	<button (click)="oldOne()"> <- </button>
+  	<button (click)="newOne()"> -> </button>
+
+  	<button (click)="setAverageThroughput()">averageThroughput</button>
+  	<button (click)="setCurrentBufferLevel()">currentBufferLevel</button>
+    <button (click)="setQuality()">quality</button>
+
+    <div style="display: block;">
+    <canvas baseChart
+            [datasets]="qoeLineChartData"
+       	 		[labels]="qoeLineChartLabels"
+        		[options]="qoeLineChartOptions"
+          	[legend]="qoeLineChartLegend"
+          	[chartType]="qoeLineChartType"
+            [colors]="qoeLineChartColors"></canvas>
+    </div>
+  </div>
+

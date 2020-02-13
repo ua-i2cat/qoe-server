@@ -1,0 +1,15 @@
+<div class="flex">
+  <div class="flex-item">
+    <div style="display: block;">
+    <canvas baseChart
+	            [datasets]="qoeLineChartData"
+       	 		[labels]="qoeLineChartLabels"
+        		[options]="qoeLineChartOptions"
+            	[legend]="qoeLineChartLegend"
+            	[chartType]="qoeLineChartType"
+                [colors]="qoeLineChartColors"
+                [chartType]="qoeLineChartType"
+                (chartHover)="chartHovered($event)"
+                (chartClick)="chartClicked($event)"></canvas>
+    </div>
+  </div>

@@ -1,0 +1,23 @@
+<div class="container">
+	<div>
+	  <h2>Sessions</h2>
+	</div>
+	<table class="table">
+	  <thead>
+	    <tr>
+	      <th scope="col">Session ID</th>
+	      <th scope="col">Content</th>
+  	      <th scope="col">Date</th>
+	      <th scope="col">Status</th>
+	    </tr>
+	  </thead>
+	  <tbody>
+	    <tr *ngFor="let session of Sessions">
+	      <th><a class="link" [routerLink]="['/session-graph']" [queryParams]="{id: session.sessionId}">{{session.sessionId}}</a></th>
+  	      <td>{{ session.url.split('/')[5] }}</td>
+	      <td>{{ session.date | date:'medium' }} </td>
+	      <td>{{START}}</td>
+	    </tr>
+	  </tbody>
+	</table>
+</div>
