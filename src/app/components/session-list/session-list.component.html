@@ -5,18 +5,26 @@
 	<table class="table">
 	  <thead>
 	    <tr>
-	      <th scope="col">Session ID</th>
+	      <th scope="col">ID</th>
 	      <th scope="col">Content</th>
-  	      <th scope="col">Date</th>
+  	      <th scope="col">Start</th>
+  	      <th scope="col">End</th>
+		  <th scope="col">Time</th>
 	      <th scope="col">Status</th>
+	      <th scope="col">Action</th>
 	    </tr>
 	  </thead>
 	  <tbody>
 	    <tr *ngFor="let session of Sessions">
-	      <th><a class="link" [routerLink]="['/session-graph']" [queryParams]="{id: session.sessionId}">{{session.sessionId}}</a></th>
-  	      <td>{{ session.url.split('/')[5] }}</td>
+	      <td><a class="link" [routerLink]="['/session-graph']" [queryParams]="{id: session.sessionId}">{{session.sessionId}}</a></td>
+  	      <td>{{ session.url.split('/')[session.url.split('/').length-2] }}</td>
 	      <td>{{ session.date | date:'medium' }} </td>
-	      <td>{{START}}</td>
+	      <td>{{ session.lastTime | date:'medium' }} </td>
+	      <td>{{ session.duration | date:'mm:ss' }} </td>
+	      <td>{{ session.status }}</td>
+	      <td>
+	      	<button class="btn btn-danger btn-sm" (click)="delete(session)">Delete</button>
+	      </td>
 	    </tr>
 	  </tbody>
 	</table>

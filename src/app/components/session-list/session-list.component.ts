@@ -18,16 +18,52 @@ export class SessionListComponent implements OnInit {
   }
 
   ngOnInit() {
+    // Get all session data
     this.getSessions();
-    this.socket.on('newSession', event => {
+
+    // Get data of new sessions
+    this.socket.on('startSession', event => {
+      event.status = 'Live';
       this.Sessions.push(event);
-      console.log(event);
+    });
+
+    //Get last data to end session
+    this.socket.on('stopSession', event => {
+      this.Sessions.map(function(element){
+        //Join start data with stop data of each session
+        if(element.sessionId === event.sessionId){
+          element.lastTime = event.date;
+          element.duration = event.date - element.date;
+          element.status = 'Ended';
+        }
+      });
     });
   }
 
+/**
+ * Gets the sessions.
+ */
   private getSessions(){
     this.apiService.getSessionsQoes().subscribe((data) => {
       this.Sessions = data;
     });    
+  }
+
+/**
+ * { function_description }
+ *
+ * @param      {<type>}  id      The identifier
+ */
+  public delete(session){
+    if(session.lastTime){
+      this.apiService.deleteSession(session.sessionId).subscribe((data) => {
+        this.Sessions = this.Sessions.filter(function( obj ) {
+          return obj.sessionId !== session.sessionId;
+        });
+      }); 
+    } else {
+      console.log("Session is live and can't be deleted");
+    }
+
   }
 }

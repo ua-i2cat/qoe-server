@@ -97,7 +97,7 @@ export class ApiService {
   }
 
   // Delete Qoe
-  deleteQoe(id): Observable<any> {
+  deleteSession(id): Observable<any> {
     let url = `${this.baseUri}/delete/${id}`;
     return this.http.delete(url, { headers: this.headers }).pipe(
       catchError(this.errorMgmt)

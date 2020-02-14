@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const qoeRoute = express.Router();
 
+const dbFunct = require('../database/functions.js');
+
 // Qoe model
 let Qoe = require('../models/Qoe');
 
@@ -10,20 +12,19 @@ qoeRoute.route('/create').post((req, res, next) => {
   const io = req.app.get('io');
   Qoe.find({sessionId: req.body.id, messageType: 'START'}, (error, data) => {
     if (data.length > 0) {
-      console.log(data);
        res.status(500).send(`The session ${data.sessionId} already started`);
     } else {
       Qoe.create(req.body, (error, data) => {
         if (error) {
           return next(error)
         } else {
+          res.status(200).send(data);
           if(data.messageType === 'START') {
-            io.emit('newSession', data);
+            io.emit('startSession', data);
+          } else if (data.messageType === 'STOP'){
+            io.emit('stopSession', data);
           }
           io.emit(data.sessionId, data);
-          res.status(200).json({
-            msg: data
-          });
         }
       })
     }
@@ -53,13 +54,13 @@ qoeRoute.route('/latlon').get((req, res) => {
 
 // Get All Qoe sessions
 qoeRoute.route('/session').get((req, res) => {
-  Qoe.find({messageType: 'START'}, 'date sessionId url', (error, data) => {
-    if (error) {
-      return next(error)
-    } else {
-      res.json(data)
-    }
-  })
+  dbFunct.getSessions()
+    .then(function(fulfilled){
+        res.json(fulfilled);
+    })
+    .catch(function (error) {
+        console.log(error);
+    });
 });
 
 // Get all data of a single Qoe session
@@ -116,13 +117,11 @@ qoeRoute.route('/update/:id').put((req, res, next) => {
 
 // Delete Qoe
 qoeRoute.route('/delete/:id').delete((req, res, next) => {
-  Qoe.findOneAndRemove(req.params.id, (error, data) => {
+  Qoe.deleteMany({sessionId: req.params.id}, (error, data) => {
     if (error) {
       return next(error);
     } else {
-      res.status(200).json({
-        msg: data
-      })
+      res.status(200).json(data);
     }
   })
 });
